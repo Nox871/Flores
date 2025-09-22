@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flores Amarillas</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --font-pixel: 'Press Start 2P', cursive;
+
+            /* Colores principales */
+            --color-bg: #203252;
+            --color-sky1: #0d1428;
+            --color-sky2: #1a2840;
+            --color-sky3: #2a3a5e;
+            --color-ground1: #754523;
+            --color-ground2: #a36b4a;
+            --color-grass1: #4caf50;
+            --color-grass2: #3e8e41;
+
+            /* Colores elementos */
+            --color-star: #fff;
+            --color-cloud: #ffffffcc;
+            --color-text-main: #FFD700;
+            --color-text-shadow: #000;
+
+            /* Tamaños */
+            --ground-height: 120px;
+            --flower-size: 16px;
+            --flower-scale: 2.5;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            font-family: var(--font-pixel);
+            background-color: var(--color-bg);
+        }
+
+        /* Texto central */
+        #main-message {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-pixel);
+            color: var(--color-text-main);
+            font-size: 1.1rem;
+            text-align: center;
+            text-shadow: 1px 1px 0 var(--color-text-shadow),
+                -1px -1px 0 var(--color-text-shadow),
+                1px -1px 0 var(--color-text-shadow),
+                -1px 1px 0 var(--color-text-shadow);
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        /* Cielo */
+        #sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        #sky-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(to bottom,
+                    var(--color-sky1) 0px,
+                    var(--color-sky1) 40px,
+                    var(--color-sky2) 40px,
+                    var(--color-sky2) 80px,
+                    var(--color-bg) 80px,
+                    var(--color-bg) 120px,
+                    var(--color-sky3) 120px,
+                    var(--color-sky3) 160px,
+                    var(--color-bg) 160px,
+                    var(--color-bg) 100%);
+            image-rendering: pixelated;
+            z-index: 1;
+        }
+
+        /* Estrellas */
+        #stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--color-star);
+            animation: twinkle 2s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0.3;
+            }
+        }
+
+        .moon {
+            position: absolute;
+            top: 60px;
+            right: 90px;
+            width: 90px;
+            height: 90px;
+            background: #f5f3ce;
+            border-radius: 35%;
+            box-shadow: 0 0 20px rgba(245, 243, 206, 0.8);
+            z-index: 2;
+        }
+
+        /* Nubes */
+        .cloud {
+            position: absolute;
+            width: 80px;
+            height: 20px;
+            background: var(--color-cloud);
+            image-rendering: pixelated;
+            box-shadow:
+                20px 0 var(--color-cloud),
+                40px 0 var(--color-cloud),
+                60px 0 var(--color-cloud),
+                20px -20px var(--color-cloud),
+                40px -20px var(--color-cloud);
+            animation: cloudMove linear infinite;
+            z-index: 3;
+        }
+
+        @keyframes cloudMove {
+            from {
+                transform: translateX(-150px);
+            }
+
+            to {
+                transform: translateX(100vw);
+            }
+        }
+
+        /* Contenedor de flores */
+        #flower-container {
+            position: absolute;
+            bottom: var(--ground-height);
+            width: 100%;
+            height: calc(100% - var(--ground-height));
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Suelo */
+        #ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: var(--ground-height);
+            background: linear-gradient(to top, var(--color-ground1), var(--color-ground2));
+            box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.2);
+            z-index: 4;
+        }
+
+        #ground::before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            width: 100%;
+            height: 20px;
+            background: repeating-linear-gradient(to right,
+                    var(--color-grass1),
+                    var(--color-grass1) 5px,
+                    var(--color-grass2) 5px,
+                    var(--color-grass2) 10px);
+        }
+
+        /* Flor */
+        .flower {
+            width: var(--flower-size);
+            height: var(--flower-size);
+            position: absolute;
+            bottom: 32px;
+            image-rendering: pixelated;
+            background: url('FlorSheet.png') 0 0 no-repeat;
+            background-size: calc(var(--flower-size) * 3) var(--flower-size);
+            transition: transform 1s ease-out;
+        }
+
+        .grow {
+            transform: scale(var(--flower-scale));
+        }
+
+        @keyframes dance {
+            0% {
+                background-position: 0 0;
+            }
+
+            25% {
+                background-position: -16px 0;
+            }
+
+            50% {
+                background-position: -32px 0;
+            }
+
+            75% {
+                background-position: -16px 0;
+            }
+
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        .dance {
+            animation: dance 1s infinite steps(1);
+            transform: scale(var(--flower-scale));
+        }
+
+        /* Mensaje de cada flor */
+        .flower-message {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffffcc;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 0.62rem;
+            text-align: center;
+            max-width: 190px;
+            color: var(--color-bg);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+        }
+
+        .flower-message::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px 8px 0 8px;
+            border-style: solid;
+            border-color: #ffffffcc transparent transparent transparent;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Texto central -->
+    <div id="main-message">
+        Feliz 21 de Septiembre <br> 🌼 <br>
+        Gracias por tu amistad
+    </div>
+
+    <!-- Cielo -->
+    <div id="sky">
+        <div id="sky-gradient"></div>
+        <div class="moon"></div>
+        <div id="stars"></div>
+    </div>
+
+    <!-- Flores y suelo -->
+    <div id="flower-container"></div>
+    <div id="ground"></div>
+
+    <script>
+        const flowerContainer = document.getElementById('flower-container');
+        const messages = [
+            "Aunque a veces no esté presente, siempre pienso en nuestra amistad",
+            "Gracias por tu paciencia y amistad, eres una gran persona para mi",
+            "Que todas tus metas y deseos se cumplan",
+            "Tu amistad es muy valiosa para mi",
+            "Amigos hasta viejitos",
+            "Que cada alegría sea más grande que la de ayer",
+        ];
+
+        const positions = ["20%", "50%", "80%"];
+        let flowerCount = 0;
+
+        document.body.addEventListener('click', () => {
+            if (flowerContainer.children.length >= 3) {
+                flowerContainer.removeChild(flowerContainer.firstChild);
+            }
+
+            const wrapper = document.createElement('div');
+            wrapper.style.position = "absolute";
+            wrapper.style.bottom = "0";
+            wrapper.style.left = positions[flowerCount % 3];
+            wrapper.style.transform = "translateX(-50%)";
+
+            const flower = document.createElement('div');
+            flower.classList.add('flower');
+            wrapper.appendChild(flower);
+
+            const msg = document.createElement('div');
+            msg.classList.add('flower-message');
+            msg.innerText = messages[flowerCount % messages.length];
+            wrapper.appendChild(msg);
+
+            flowerContainer.appendChild(wrapper);
+
+            setTimeout(() => flower.classList.add('grow'), 50);
+            setTimeout(() => {
+                flower.classList.remove('grow');
+                flower.classList.add('dance');
+            }, 1500);
+
+            flowerCount++;
+        });
+
+        // Estrellas aleatorias
+        const stars = document.getElementById('stars');
+        for (let i = 0; i < 60; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.top = `${Math.random() * 70}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.animationDuration = `${1.5 + Math.random() * 2}s`;
+            star.style.animationDelay = `${Math.random() * 2}s`;
+            stars.appendChild(star);
+        }
+
+        // Nubes
+        const sky = document.getElementById('sky');
+        for (let i = 0; i < 6; i++) {
+            const cloud = document.createElement('div');
+            cloud.classList.add('cloud');
+            cloud.style.top = `${40 + i * 30}px`;
+            cloud.style.left = `${Math.random() * 100}%`;
+            cloud.style.opacity = 0.6 + Math.random() * 0.4;
+            cloud.style.animationDuration = `${60 + i * 20}s`;
+            sky.appendChild(cloud);
+        }
+    </script>
+</body>
+
+</html>
