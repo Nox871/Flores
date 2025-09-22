@@ -51,7 +51,7 @@
             transform: translateX(-50%);
             font-family: var(--font-pixel);
             color: var(--color-text-main);
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             text-align: center;
             text-shadow: 1px 1px 0 var(--color-text-shadow),
                 -1px -1px 0 var(--color-text-shadow),
@@ -271,8 +271,7 @@
         /* Texto de instrucción */
         #click-hint {
             position: absolute;
-            bottom: 50px;
-            /* altura sobre el suelo */
+            bottom: 25%;
             left: 50%;
             transform: translateX(-50%);
             font-family: var(--font-pixel);
@@ -283,11 +282,8 @@
             z-index: 6;
             animation: blink 1.2s infinite alternate;
             white-space: nowrap;
-            /* 🔑 mantiene el texto en una sola línea */
             pointer-events: none;
-            /* no bloquea clics */
             transition: opacity 1s ease-out;
-            /* para desvanecer */
         }
 
 
