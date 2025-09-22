@@ -59,8 +59,9 @@
                 -1px 1px 0 var(--color-text-shadow);
             z-index: 10;
             background: rgba(0, 0, 0, 0.15);
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 8px;
+            line-height: 1.4;
         }
 
         /* Cielo */
@@ -253,6 +254,7 @@
             max-width: 190px;
             color: var(--color-bg);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+            line-height: 1.4;
         }
 
         .flower-message::after {
@@ -264,6 +266,40 @@
             border-width: 10px 8px 0 8px;
             border-style: solid;
             border-color: #ffffffcc transparent transparent transparent;
+        }
+
+        /* Texto de instrucción */
+        #click-hint {
+            position: absolute;
+            bottom: 50px;
+            /* altura sobre el suelo */
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-pixel);
+            font-size: 0.7rem;
+            color: #fff;
+            opacity: 0.8;
+            text-shadow: 1px 1px 0 #000, -1px -1px 0 #000;
+            z-index: 6;
+            animation: blink 1.2s infinite alternate;
+            white-space: nowrap;
+            /* 🔑 mantiene el texto en una sola línea */
+            pointer-events: none;
+            /* no bloquea clics */
+            transition: opacity 1s ease-out;
+            /* para desvanecer */
+        }
+
+
+        /* Animación para llamar la atención */
+        @keyframes blink {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0.4;
+            }
         }
     </style>
 </head>
@@ -286,6 +322,8 @@
     <!-- Flores y suelo -->
     <div id="flower-container"></div>
     <div id="ground"></div>
+    <!-- Instrucción de clic -->
+    <div id="click-hint">Haz clic varias veces sobre la pantalla</div>
 
     <script>
         const flowerContainer = document.getElementById('flower-container');
@@ -355,6 +393,26 @@
             cloud.style.animationDuration = `${60 + i * 20}s`;
             sky.appendChild(cloud);
         }
+    </script>
+
+
+    <script>
+        const clickHint = document.getElementById("click-hint");
+
+        // Desaparece después de 5 segundos automáticamente
+        setTimeout(() => {
+            clickHint.style.opacity = "0";
+            clickHint.style.transition = "opacity 1s ease-out";
+        }, 5000);
+
+        // O desaparece cuando el usuario haga clic
+        document.body.addEventListener("click", () => {
+            if (clickHint) {
+                clickHint.style.opacity = "0";
+                clickHint.style.transition = "opacity 0.8s ease-out";
+                setTimeout(() => clickHint.remove(), 1000); // lo elimina del DOM
+            }
+        });
     </script>
 </body>
 
